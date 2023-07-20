@@ -1,10 +1,9 @@
 from aiogram import types
 from aiogram.dispatcher.handler import CancelHandler
 from aiogram.dispatcher.middlewares import BaseMiddleware
-from aiogram.types import message
 
-from data.config import CHANNELS
-from utils.misc import subscription
+from src.data.config import CHANNELS
+from src.utils.misc import subscription
 
 from loader import bot, dp, db
 
@@ -19,31 +18,29 @@ class BigBrother(BaseMiddleware):
                 if update.message.text in ['/start', '/help']:
                     return
 
-            elif update.callback_query:
-                user = update.callback_query.from_user.id
-                if update.callback_query.data == "check_subs":
-                    final_status = True
-                    for channel in CHANNELS:
-                        status = await subscription.check(user_id=user, channel=channel)
-                        final_status *= status
-                    if final_status:
-                        await bot.answer_callback_query(update.callback_query.id, text="You have subscribed to all the required channels!")
-                        await bot.delete_message(update.callback_query.message.chat.id, update.callback_query.message.message_id)
-                    else:
-                        await bot.answer_callback_query(update.callback_query.id, text="Please subscribe to all the required channels before using the bot.")
-                    return
-            else:
-                return
+                channels_keyboard = types.InlineKeyboardMarkup(row_width=1)
+                for i, channel in enumerate(CHANNELS):
+                    status = await subscription.check(user_id=user, channel=channel)
+                    if not status:
+                        channels_keyboard.add(types.InlineKeyboardButton(text=f"Channel #{i + 1}",
+                                                                         url=await bot.export_chat_invite_link(channel)))
 
-            channels_keyboard = types.InlineKeyboardMarkup(row_width=1)
-            for i, channel in enumerate(CHANNELS):
-                status = await subscription.check(user_id=user, channel=channel)
-                if not status:
-                    channels_keyboard.add(types.InlineKeyboardButton(text=f"Channel #{i+1}", url=await bot.export_chat_invite_link(channel)))
+                if channels_keyboard.inline_keyboard:
+                    channels_keyboard.add(types.InlineKeyboardButton(text="Done ✅", callback_data="check_subs"))
+                    await update.message.answer('😔 You haven\'t subscribed to our channels yet!\n\nSubscribe and click "Done ✅"', reply_markup=channels_keyboard, disable_web_page_preview=True)
 
-            if channels_keyboard.inline_keyboard:
-                channels_keyboard.add(types.InlineKeyboardButton(text="Done ✅", callback_data="check_subs"))
-                await update.message.answer('😔 You haven\'t subscribed to our channels yet!\n\nSubscribe and click "Done ✅"', reply_markup=channels_keyboard, disable_web_page_preview=True)
-                raise CancelHandler()
+        elif update.callback_query:
+            user = update.callback_query.from_user.id
+            if update.callback_query.data == "check_subs":
+                final_status = True
+                for channel in CHANNELS:
+                    status = await subscription.check(user_id=user, channel=channel)
+                    final_status *= status
+                if final_status:
+                    await bot.answer_callback_query(update.callback_query.id, text="You have subscribed to all the required channels!")
+                    await bot.delete_message(update.callback_query.message.chat.id, update.callback_query.message.message_id)
+                else:
+                    await bot.answer_callback_query(update.callback_query.id, text="Please subscribe to all the required channels before using the bot.")
+
 
 
