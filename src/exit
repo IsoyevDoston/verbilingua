@@ -1,0 +1,27 @@
+[33mcommit ea42f3d5159b7061c40c5686ffc60875956dd0db[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Merge: 3f5a3e0 f2704a7
+Author: Doston <isoyevdoston1@gmail.com>
+Date:   Fri Jul 21 01:09:05 2023 +0500
+
+    Merge remote-tracking branch 'origin/master'
+
+[33mcommit f2704a7dbc955a60e347d80b4ad2f770df36317a[m
+Author: doston <110292294+IsoyevDoston@users.noreply.github.com>
+Date:   Fri Jul 21 01:06:15 2023 +0500
+
+    Create python-app.yml
+
+[33mcommit 3f5a3e017fc1c2b8dfa85f49628deebb2920a38f[m
+Author: Doston <isoyevdoston1@gmail.com>
+Date:   Fri Jul 21 01:03:10 2023 +0500
+
+    Fixed remove inline keyboard for checksub(mandatory subscription)
+    git status
+    
+    exit
+
+[33mcommit 7825163623a1c64a638fe410770fce340a2a1815[m
+Author: Doston <isoyevdoston1@gmail.com>
+Date:   Sat Jul 15 18:44:33 2023 +0500
+
+    Updated project with git
