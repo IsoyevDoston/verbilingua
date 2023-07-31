@@ -1,1 +1,1 @@
-worker: python app.py
+worker: worker: python language_exchange/src/app.py
